@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+    
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <header id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="brand" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">
+                <img src="data:image/jpeg;base64,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" alt="Logo" class="brand-img">
+                <span class="brand-name">ooia</span>
+            </a>
+
+            <nav class="nav-menu" id="nav-menu">
+                <div class="mobile-menu-header">
+                    <span>MENU</span>
+                    <button onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <a href="#cat_1" onclick="toggleMenu()">Outerwear</a>
+                <a href="#cat_2" onclick="toggleMenu()">Casual</a>
+                <a href="#cat_3" onclick="toggleMenu()">Office</a>
+                <a href="#" onclick="openModal('LOGIN'); toggleMenu()" class="mobile-login-link">Đăng Nhập</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="hamburger-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+
+                <button class="hide-on-mobile"><i class="fa-solid fa-magnifying-glass"></i></button>
+                
+                <button onclick="openModal('WISHLIST')" class="icon-btn">
+                    <i class="fa-regular fa-heart"></i>
+                    <span id="wishlist-badge" class="badge hidden">0</span>
+                </button>
+
+                <button onclick="openModal('CART')" class="icon-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-badge" class="badge hidden">0</span>
+                </button>
+
+                <button id="user-btn" class="login-btn" onclick="openModal('LOGIN')">LOGIN</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div id="hero-slides"></div>
+        
+        <button class="slider-btn prev" onclick="changeSlide(-1)">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-btn next" onclick="changeSlide(1)">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        
+        <div id="hero-indicators"></div>
+    </section>
+
+    <main id="main-content"></main>
+
+    <section class="slogan-section">
+        <div class="container">
+            <h2>Simple Made Better</h2>
+            <p>"Chúng tôi không chỉ tạo ra quần áo. Chúng tôi tạo ra sự thoải mái, niềm vui và những khả năng mới."</p>
+            <div class="slogan-footer">
+                <span class="line"></span>
+                <p class="small-text">Thank you for choosing us</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>UIA LIFEWEARSTYLE</h4>
+                    <p>Trang phục thiết yếu cho cuộc sống hiện đại. Đơn giản, chất lượng, bền vững.</p>
+                </div>
+                <div>
+                    <h5>Khám Phá</h5>
+                    <ul>
+                        <li><a href="#">Hàng Mới Về</a></li>
+                        <li><a href="#">Bộ Sưu Tập</a></li>
+                        <li><a href="#">Tin Tức</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Trợ Giúp</h5>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Newsletter</h5>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Email của bạn">
+                        <button>Gửi</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© UIA UIA UIA</p>
+                <div class="socials">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content">
+            <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
