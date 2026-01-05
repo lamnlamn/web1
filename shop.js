@@ -258,10 +258,22 @@ function initAddToCart(id) {
 }
 
 function confirmAddToCart(size) {
-    if(!currentState.selectedProductForCart) return;
+    //Validate sản phẩm tồn tại
+    if(!currentState.selectedProductForCart) {
+        showToast('Lỗi: Không tìm thấy sản phẩm!');
+        return;
+    }
+
+    // Validate Size
+    // Nếu size là null, undefined hoặc rỗng
+    if (!size || size === 'undefined') {
+        showToast('Vui lòng chọn Size trước khi thêm!');
+        return;
+    }
+
     const item = { ...currentState.selectedProductForCart, size, quantity: 1 };
     currentState.cart.push(item);
-    showToast(`Added ${item.name} (${size}) to Cart`);
+    showToast(`Đã thêm ${item.name} (Size ${size}) vào giỏ`);
     updateNavbar();
     closeModal();
 }
@@ -295,10 +307,10 @@ function navigateToProduct(id) {
 function performSearch(query) {
     const container = document.getElementById('search-results');
     if (!query) {
-        container.innerHTML = '<p style="color:#999; text-align:center;">Start typing to search...</p>';
+        container.innerHTML = '<p style="color:#999; text-align:center;">Vui lòng nhâp từ khóa để tìm kiếm...</p>';
         return;
     }
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase().trim();
     const results = ALL_PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerQuery));
 
     if (results.length === 0) {
@@ -321,13 +333,26 @@ function performSearch(query) {
 }
 
 function subscribeNewsletter() {
-    const email = document.getElementById('cs-email').value;
-    if(email) {
-        showToast('Thank you for subscribing!');
-        document.getElementById('cs-email').value = '';
-    } else {
-        showToast('Please enter your email.');
+    const emailInput = document.getElementById('cs-email');
+    const email = emailInput.value.trim(); // Xóa khoảng trắng thừa
+
+    // 1. Kiểm tra rỗng
+    if (!email) {
+        showToast('Vui lòng nhập địa chỉ Email!');
+        emailInput.focus();
+        return;
     }
+
+    // 2. Kiểm tra định dạng Email (Validate)
+    if (!isValidEmail(email)) {
+        showToast('Email không hợp lệ! (Ví dụ: abc@gmail.com)');
+        emailInput.focus();
+        return;
+    }
+
+    // 3. Thành công
+    showToast('Cảm ơn bạn đã đăng ký!');
+    emailInput.value = '';
 }
 
 // --- LOGIC: MODALS ---
@@ -354,7 +379,7 @@ function openModal(type) {
                     <h2 class="modal-title">Login</h2>
                     <div>
                         <input type="text" id="login-name" placeholder="Username / Email" class="input-field">
-                        <input type="password" placeholder="Password" class="input-field">
+                        <input type="password" id="login-pass" placeholder="Password" class="input-field">
                         <button onclick="login()" class="modal-btn">Sign In</button>
                         <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #666;">Don't have an account? <a href="#" style="text-decoration: underline;">Register</a></p>
                     </div>
@@ -490,14 +515,38 @@ function selectSize(btn, size) {
 }
 
 function login() {
-    const name = document.getElementById('login-name').value;
-    if(name) {
-        currentState.user = name;
-        localStorage.setItem('currentUser', name);
-        showToast(`Welcome back, ${name}`);
-        updateNavbar();
-        closeModal();
+    const nameInput = document.getElementById('login-name');
+    const passInput = document.getElementById('login-pass'); // Cần ID này từ bước 1
+    
+    const name = nameInput.value.trim();
+    const pass = passInput ? passInput.value.trim() : '';
+
+    //Validate Tên đăng nhập
+    if (!name) {
+        showToast('Vui lòng nhập Tên đăng nhập!');
+        nameInput.focus();
+        return;
     }
+
+    //Validate Mật khẩu (Ví dụ: phải trên 6 ký tự)
+    if (!pass) {
+        showToast('Vui lòng nhập Mật khẩu!');
+        if(passInput) passInput.focus();
+        return;
+    }
+    
+    if (pass.length < 6) {
+        showToast('Mật khẩu phải có ít nhất 6 ký tự!');
+        if(passInput) passInput.focus();
+        return;
+    }
+
+    //Xử lý logic đăng nhập
+    currentState.user = name;
+    localStorage.setItem('currentUser', name);
+    showToast(`Chào mừng trở lại, ${name}`);
+    updateNavbar();
+    closeModal();
 }
 
 function logout() {
@@ -524,4 +573,9 @@ function toggleMenu() {
         menu.classList.toggle('active');
         overlay.classList.toggle('active');
     }
+}
+//Validate 1
+function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
 }
